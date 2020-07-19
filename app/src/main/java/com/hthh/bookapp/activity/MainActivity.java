@@ -77,7 +77,7 @@ public class MainActivity extends AppCompatActivity {
                         setUpHome();
                         break;
                     case R.id.btnClassify:
-//                        vpMain.setCurrentItem(1);
+                        vpMain.setCurrentItem(1);
                         setUpClassify();
                         break;
                     case R.id.btnSetting:
