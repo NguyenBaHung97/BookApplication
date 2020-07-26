@@ -95,14 +95,14 @@
                 android:id="@+id/imgSetting"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/ic_gear" />
+                android:src="@drawable/ic_star_1" />
 
             <TextView
                 android:id="@+id/txtSetting"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="6dp"
-                android:text="Thiết lập"
+                android:text="Tủ sách"
                 android:textColor="#BDBDBD"
                 android:textSize="14sp" />
         </LinearLayout>

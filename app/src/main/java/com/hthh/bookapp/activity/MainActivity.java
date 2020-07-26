@@ -81,7 +81,7 @@ public class MainActivity extends AppCompatActivity {
                         setUpClassify();
                         break;
                     case R.id.btnSetting:
-//                        vpMain.setCurrentItem(2);
+                        vpMain.setCurrentItem(2);
                         setUpSetting();
                         break;
                 }
@@ -124,7 +124,7 @@ public class MainActivity extends AppCompatActivity {
         txtHome.setTextColor(Color.parseColor("#1565C0"));
         imgClassify.setImageDrawable(getResources().getDrawable(R.drawable.ic_queue));
         txtClassify.setTextColor(Color.parseColor("#BDBDBD"));
-        imgSetting.setImageDrawable(getResources().getDrawable(R.drawable.ic_gear));
+        imgSetting.setImageDrawable(getResources().getDrawable(R.drawable.ic_star_1));
         txtSetting.setTextColor(Color.parseColor("#BDBDBD"));
     }
 
@@ -133,7 +133,7 @@ public class MainActivity extends AppCompatActivity {
         txtHome.setTextColor(Color.parseColor("#BDBDBD"));
         imgClassify.setImageDrawable(getResources().getDrawable(R.drawable.ic_queue_color));
         txtClassify.setTextColor(Color.parseColor("#1565C0"));
-        imgSetting.setImageDrawable(getResources().getDrawable(R.drawable.ic_gear));
+        imgSetting.setImageDrawable(getResources().getDrawable(R.drawable.ic_star_1));
         txtSetting.setTextColor(Color.parseColor("#BDBDBD"));
     }
 
@@ -142,7 +142,7 @@ public class MainActivity extends AppCompatActivity {
         txtHome.setTextColor(Color.parseColor("#BDBDBD"));
         imgClassify.setImageDrawable(getResources().getDrawable(R.drawable.ic_queue));
         txtClassify.setTextColor(Color.parseColor("#BDBDBD"));
-        imgSetting.setImageDrawable(getResources().getDrawable(R.drawable.ic_gear_color));
+        imgSetting.setImageDrawable(getResources().getDrawable(R.drawable.ic_star_color));
         txtSetting.setTextColor(Color.parseColor("#1565C0"));
     }
 }
