@@ -6,6 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -18,6 +19,7 @@ public class ChapAdapter extends RecyclerView.Adapter<ChapAdapter.ViewHolder> {
     private Context context;
     private List<ChapStory> chapStories;
     private LayoutInflater inflater;
+    private OnClickItemListener onClickItemListener;
 
     public ChapAdapter(Context context, List<ChapStory> chapStories) {
         this.context = context;
@@ -34,14 +36,24 @@ public class ChapAdapter extends RecyclerView.Adapter<ChapAdapter.ViewHolder> {
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        ChapStory chapStory = chapStories.get(position);
+        final ChapStory chapStory = chapStories.get(position);
         holder.txtName.setText(chapStory.getName_chap());
         holder.txtTime.setText(chapStory.getDate());
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                onClickItemListener.onClicked(Integer.parseInt(chapStory.getId()));
+            }
+        });
     }
 
     @Override
     public int getItemCount() {
         return chapStories.size();
+    }
+
+    public void setOnClickItemListener(OnClickItemListener onClickItemListener) {
+        this.onClickItemListener = onClickItemListener;
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
@@ -53,5 +65,9 @@ public class ChapAdapter extends RecyclerView.Adapter<ChapAdapter.ViewHolder> {
             txtName = itemView.findViewById(R.id.txtNameChapter);
             txtTime = itemView.findViewById(R.id.txtTime);
         }
+    }
+
+    public interface OnClickItemListener{
+        void onClicked(int id);
     }
 }

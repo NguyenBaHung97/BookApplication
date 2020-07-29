@@ -22,6 +22,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".activity.ChapActivity" />
+        <activity android:name=".activity.StoryActivity" />
     </application>
 
 </manifest>

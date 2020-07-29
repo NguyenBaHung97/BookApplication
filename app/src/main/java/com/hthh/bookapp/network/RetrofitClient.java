@@ -38,4 +38,5 @@ public class RetrofitClient {
     Gson gson = new GsonBuilder()
             .setLenient()
             .create();
+    // public ip, setLenient, network security
 }

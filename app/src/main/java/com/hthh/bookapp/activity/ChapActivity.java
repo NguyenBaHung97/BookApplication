@@ -1,5 +1,6 @@
 package com.hthh.bookapp.activity;
 
+import android.content.Intent;
 import android.media.Image;
 import android.os.Bundle;
 import android.widget.ImageView;
@@ -50,6 +51,14 @@ public class ChapActivity extends AppCompatActivity {
 
                 } else {
                     chapAdapter = new ChapAdapter(ChapActivity.this, response.body());
+                    chapAdapter.setOnClickItemListener(new ChapAdapter.OnClickItemListener() {
+                        @Override
+                        public void onClicked(int id) {
+                            Intent intent = new Intent(ChapActivity.this, StoryActivity.class);
+                            intent.putExtra("id_chap", id);
+                            startActivity(intent);
+                        }
+                    });
                     rcvChap.setLayoutManager(new LinearLayoutManager(ChapActivity.this));
                     rcvChap.setAdapter(chapAdapter);
                 }

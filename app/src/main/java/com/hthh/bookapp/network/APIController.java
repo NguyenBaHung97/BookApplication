@@ -1,6 +1,7 @@
 package com.hthh.bookapp.network;
 
 import com.hthh.bookapp.model.ChapStory;
+import com.hthh.bookapp.model.LinkImage;
 import com.hthh.bookapp.model.StoryOfBookcase;
 
 import java.util.List;
@@ -15,4 +16,7 @@ public interface APIController {
 
     @GET("story_manager/layChap.php")
     Call<List<ChapStory>> getChap(@Query("id") int id);
+
+    @GET("story_manager/layAnh.php")
+    Call<List<LinkImage>> getLinkImage(@Query("id_chap") int id_chap);
 }
