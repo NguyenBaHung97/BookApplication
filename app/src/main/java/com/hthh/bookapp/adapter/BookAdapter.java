@@ -21,7 +21,7 @@ public class BookAdapter extends RecyclerView.Adapter<BookAdapter.ViewHolder> {
     private Context context;
     private List<Story> books;
     private LayoutInflater inflater;
-    private StoryAdapter.OnClickItemListener onClickItemListener;
+    private OnClickItemListener onClickItemListener;
 
     public BookAdapter(Context context, List<Story> books) {
         this.context = context;
@@ -47,6 +47,13 @@ public class BookAdapter extends RecyclerView.Adapter<BookAdapter.ViewHolder> {
                 onClickItemListener.onClicked(book);
             }
         });
+        holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View view) {
+                onClickItemListener.onLongClick(book);
+                return false;
+            }
+        });
     }
 
     @Override
@@ -54,7 +61,7 @@ public class BookAdapter extends RecyclerView.Adapter<BookAdapter.ViewHolder> {
         return books.size();
     }
 
-    public void setOnClickItemListener(StoryAdapter.OnClickItemListener onClickItemListener) {
+    public void setOnClickItemListener(OnClickItemListener onClickItemListener) {
         this.onClickItemListener = onClickItemListener;
     }
 
@@ -71,5 +78,7 @@ public class BookAdapter extends RecyclerView.Adapter<BookAdapter.ViewHolder> {
 
     public interface OnClickItemListener{
         void onClicked(Story story);
+
+        void onLongClick(Story story);
     }
 }

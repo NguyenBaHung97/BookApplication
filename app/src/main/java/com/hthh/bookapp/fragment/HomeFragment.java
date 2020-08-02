@@ -2,6 +2,7 @@ package com.hthh.bookapp.fragment;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -25,6 +26,8 @@ import com.hthh.bookapp.adapter.BookAdapter;
 import com.hthh.bookapp.adapter.OfferAdapter;
 import com.hthh.bookapp.adapter.SlideAdapter;
 import com.hthh.bookapp.adapter.StoryAdapter;
+import com.hthh.bookapp.api.AddStory;
+import com.hthh.bookapp.api.Apirun;
 import com.hthh.bookapp.model.Book;
 import com.hthh.bookapp.model.Story;
 import com.hthh.bookapp.network.RetrofitClient;
@@ -37,18 +40,10 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class HomeFragment extends Fragment {
+public class HomeFragment extends Fragment implements AddStory {
     private List<Integer> integerList;
     private SlideAdapter adapter;
     private ViewPager vpSlide;
-    private ImageView imgBook;
-    private TextView txtName;
-    private ImageView imgBook1;
-    private TextView txtName1;
-    private ImageView imgBook2;
-    private TextView txtName2;
-    private ImageView imgBook3;
-    private TextView txtName3;
     private CircleIndicator indicator;
 
     private RecyclerView rcvBook;
@@ -99,9 +94,9 @@ public class HomeFragment extends Fragment {
 
     public void setSlideAdapter() {
         integerList = new ArrayList<>();
-        integerList.add(R.drawable.slide_test);
-        integerList.add(R.drawable.slide_test);
-        integerList.add(R.drawable.slide_test);
+        integerList.add(R.drawable.poster_doraemon);
+        integerList.add(R.drawable.poster_one_piece);
+        integerList.add(R.drawable.poster_naruto);
         integerList.add(R.drawable.slide_test);
         integerList.add(R.drawable.slide_test);
 
@@ -122,12 +117,35 @@ public class HomeFragment extends Fragment {
                     stories.clear();
                     stories.addAll(response.body());
                     bookAdapter = new BookAdapter(getActivity(), stories);
-                    bookAdapter.setOnClickItemListener(new StoryAdapter.OnClickItemListener() {
+                    bookAdapter.setOnClickItemListener(new BookAdapter.OnClickItemListener() {
                         @Override
                         public void onClicked(Story story) {
                             Intent intent = new Intent(getActivity(), ChapActivity.class);
                             intent.putExtra("Story", story);
                             startActivity(intent);
+                        }
+
+                        @Override
+                        public void onLongClick(final Story story) {
+                            final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                            builder.setTitle("Thông báo");
+                            builder.setMessage("Bạn có muốn thêm: " + story.getName_story() + " vào tủ truyện không ?");
+                            builder.setNegativeButton("Không", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+                                    dialogInterface.dismiss();
+                                }
+                            });
+                            builder.setPositiveButton("Có", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+                                    String sql = "INSERT INTO `story_talk` (`id`, `id_story`, `id_user`) VALUES (NULL, '" + 6 + "', '1')";
+                                    new Apirun(sql, HomeFragment.this).execute();
+                                    dialogInterface.dismiss();
+                                }
+                            });
+                            AlertDialog alertDialog = builder.create();
+                            alertDialog.show();
                         }
                     });
                     rcvBook.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false));
@@ -156,12 +174,17 @@ public class HomeFragment extends Fragment {
                     storiesHot.clear();
                     storiesHot.addAll(response.body());
                     bookHotAdapter = new BookAdapter(getActivity(), storiesHot);
-                    bookHotAdapter.setOnClickItemListener(new StoryAdapter.OnClickItemListener() {
+                    bookHotAdapter.setOnClickItemListener(new BookAdapter.OnClickItemListener() {
                         @Override
                         public void onClicked(Story story) {
                             Intent intent = new Intent(getActivity(), ChapActivity.class);
                             intent.putExtra("Story", story);
                             startActivity(intent);
+                        }
+
+                        @Override
+                        public void onLongClick(Story story) {
+
                         }
                     });
                     rcvBookHot.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false));
@@ -199,7 +222,7 @@ public class HomeFragment extends Fragment {
 
                         @Override
                         public void onClickLong(Story story) {
-                           
+
                         }
                     });
                     rcvOffer.setLayoutManager(new GridLayoutManager(getActivity(), 2));
@@ -217,4 +240,18 @@ public class HomeFragment extends Fragment {
     }
 
 
+    @Override
+    public void start() {
+
+    }
+
+    @Override
+    public void finish(String data) {
+
+    }
+
+    @Override
+    public void error() {
+
+    }
 }
