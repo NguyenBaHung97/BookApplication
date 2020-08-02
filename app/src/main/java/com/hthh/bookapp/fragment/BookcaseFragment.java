@@ -61,7 +61,7 @@ public class BookcaseFragment extends Fragment {
                         @Override
                         public void onClickItem(StoryOfBookcase storyOfBookcase) {
                             Intent intent = new Intent(getActivity(), ChapActivity.class);
-                            intent.putExtra("story", storyOfBookcase);
+                            intent.putExtra("StoryOfBookcase", storyOfBookcase);
                             startActivity(intent);
                         }
                     });

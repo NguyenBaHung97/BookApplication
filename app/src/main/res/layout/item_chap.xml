@@ -14,7 +14,7 @@
         android:textSize="17sp" />
 
     <TextView
-        android:fontFamily="serif-monospace"
+        android:fontFamily="serif"
         android:id="@+id/txtTime"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

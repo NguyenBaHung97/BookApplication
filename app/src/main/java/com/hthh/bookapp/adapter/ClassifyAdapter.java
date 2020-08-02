@@ -1,17 +1,11 @@
 package com.hthh.bookapp.adapter;
 
-import android.view.View;
-import android.view.ViewGroup;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
-import androidx.viewpager.widget.PagerAdapter;
 
-import com.hthh.bookapp.fragment.FiveStoryFragment;
-import com.hthh.bookapp.fragment.FourStoryFragment;
 import com.hthh.bookapp.fragment.OneStoryFragment;
 import com.hthh.bookapp.fragment.ThreeStoryFragment;
 import com.hthh.bookapp.fragment.TwoStoryFragment;
@@ -22,8 +16,6 @@ public class ClassifyAdapter extends FragmentPagerAdapter {
     private OneStoryFragment oneStoryFragment;
     private TwoStoryFragment twoStoryFragment;
     private ThreeStoryFragment threeStoryFragment;
-    private FourStoryFragment fourStoryFragment;
-    private FiveStoryFragment fiveStoryFragment;
 
     private List<String> list;
 
@@ -51,23 +43,13 @@ public class ClassifyAdapter extends FragmentPagerAdapter {
                     threeStoryFragment = new ThreeStoryFragment();
                 }
                 return threeStoryFragment;
-            case 3:
-                if (fourStoryFragment == null) {
-                    fourStoryFragment = new FourStoryFragment();
-                }
-                return fourStoryFragment;
-            case 4:
-                if (fiveStoryFragment == null) {
-                    fiveStoryFragment = new FiveStoryFragment();
-                }
-                return fiveStoryFragment;
         }
         return null;
     }
 
     @Override
     public int getCount() {
-        return 5;
+        return 3;
     }
 
     @Nullable

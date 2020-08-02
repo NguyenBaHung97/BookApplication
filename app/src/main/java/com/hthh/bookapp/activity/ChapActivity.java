@@ -15,6 +15,7 @@ import com.bumptech.glide.Glide;
 import com.hthh.bookapp.R;
 import com.hthh.bookapp.adapter.ChapAdapter;
 import com.hthh.bookapp.model.ChapStory;
+import com.hthh.bookapp.model.Story;
 import com.hthh.bookapp.model.StoryOfBookcase;
 import com.hthh.bookapp.network.RetrofitClient;
 
@@ -29,17 +30,26 @@ public class ChapActivity extends AppCompatActivity {
     private ImageView imgAvatar;
     private TextView txtName;
     private ChapAdapter chapAdapter;
-    private StoryOfBookcase story;
+    private StoryOfBookcase storyOfBookcase;
+    private Story story;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chap);
         initView();
-        story = (StoryOfBookcase) getIntent().getSerializableExtra("story");
-        Glide.with(this).load(story.getLinkimage()).into(imgAvatar);
-        txtName.setText(story.getName());
-        callApiGetData(Integer.parseInt(story.getId()));
+        if (getIntent().hasExtra("StoryOfBookcase")) {
+            storyOfBookcase = (StoryOfBookcase) getIntent().getSerializableExtra("StoryOfBookcase");
+            Glide.with(this).load(storyOfBookcase.getLinkimage()).into(imgAvatar);
+            txtName.setText(storyOfBookcase.getName());
+            callApiGetData(Integer.parseInt(storyOfBookcase.getId()));
+        }
+        if (getIntent().hasExtra("Story")){
+            story = (Story) getIntent().getSerializableExtra("Story");
+            Glide.with(this).load(story.getImage_story()).into(imgAvatar);
+            txtName.setText(story.getName_story());
+            callApiGetData(Integer.parseInt(story.getId()));
+        }
     }
 
     public void callApiGetData(int id) {

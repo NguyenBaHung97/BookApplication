@@ -11,11 +11,12 @@
         android:layout_height="200dp">
 
         <LinearLayout
-            android:background="@android:color/darker_gray"
+            android:background="#ddd"
             android:layout_centerInParent="true"
             android:layout_width="match_parent"
             android:layout_height="150dp">
             <TextView
+                android:textStyle="bold"
                 android:layout_marginLeft="150dp"
                 android:fontFamily="serif"
                 android:layout_alignParentBottom="true"
@@ -24,7 +25,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:padding="16dp"
-                android:textColor="@android:color/white"
+                android:textColor="@android:color/black"
                 android:textSize="16sp" />
         </LinearLayout>
         <com.makeramen.roundedimageview.RoundedImageView

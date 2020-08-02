@@ -12,4 +12,7 @@
     <domain-config cleartextTrafficPermitted="true">
         <domain includeSubdomains="true">file.kenhsinhvien.vn</domain>
     </domain-config>
+    <domain-config cleartextTrafficPermitted="true">
+        <domain includeSubdomains="true">172.16.1.78</domain>
+    </domain-config>
 </network-security-config>

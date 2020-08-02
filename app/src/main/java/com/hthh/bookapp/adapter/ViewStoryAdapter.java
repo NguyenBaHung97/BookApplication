@@ -37,8 +37,7 @@ public class ViewStoryAdapter extends RecyclerView.Adapter<ViewStoryAdapter.View
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         LinkImage linkImage = images.get(position);
-        Log.d("8911", "onBindViewHolder: " + linkImage.getImage().substring(2).replaceFirst("https","http"));
-        Glide.with(context).load(linkImage.getImage().substring(2).replaceFirst("https","http")).into(holder.imgStory);
+        Glide.with(context).load(linkImage.getImage()).into(holder.imgStory);
     }
 
     @Override

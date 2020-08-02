@@ -3,8 +3,23 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
+    android:background="#F9F9F9"
     android:layout_height="match_parent"
     tools:context=".activity.MainActivity">
+    <RelativeLayout
+        android:id="@+id/rlTab"
+        android:background="#FFFFFF"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <ImageView
+            android:layout_margin="8dp"
+            android:src="@mipmap/ic_launcher"
+            android:layout_width="28dp"
+            android:layout_height="28dp"/>
+    </RelativeLayout>
 
     <androidx.viewpager.widget.ViewPager
         android:id="@+id/vpMain"
@@ -14,7 +29,7 @@
         app:layout_constraintBottom_toTopOf="@id/lnlTab"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@id/rlTab" />
     <View
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -23,6 +38,7 @@
         android:layout_width="match_parent"
         android:layout_height="1dp"/>
     <LinearLayout
+        android:background="#FFFFFF"
         android:id="@+id/lnlTab"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -48,6 +64,7 @@
                 android:src="@drawable/ic_home" />
 
             <TextView
+                android:fontFamily="serif"
                 android:id="@+id/txtHome"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -73,6 +90,7 @@
                 android:src="@drawable/ic_queue" />
 
             <TextView
+                android:fontFamily="serif"
                 android:id="@+id/txtClassify"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -98,6 +116,7 @@
                 android:src="@drawable/ic_star_1" />
 
             <TextView
+                android:fontFamily="serif"
                 android:id="@+id/txtSetting"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

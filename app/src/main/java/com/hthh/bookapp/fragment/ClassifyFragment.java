@@ -50,11 +50,9 @@ public class ClassifyFragment extends Fragment {
     public void setUpViewPager() {
         classifyAdapter = new ClassifyAdapter(getActivity().getSupportFragmentManager());
         strings = new ArrayList<>();
-        strings.add("Hot");
-        strings.add("Mới");
-        strings.add("Tình yêu");
+        strings.add("Tình cảm");
+        strings.add("Trinh thám");
         strings.add("Hành động");
-        strings.add("Đã đọc");
         classifyAdapter.setList(strings);
         vpClassify.setAdapter(classifyAdapter);
         tabLayout.setupWithViewPager(vpClassify);

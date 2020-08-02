@@ -1,10 +1,10 @@
 package com.hthh.bookapp.adapter;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -13,28 +13,31 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.hthh.bookapp.R;
 import com.hthh.bookapp.model.Story;
+import com.hthh.bookapp.model.StoryOfBookcase;
+import com.makeramen.roundedimageview.RoundedImageView;
 
 import java.util.List;
 
-public class StoryAdapter extends RecyclerView.Adapter<StoryAdapter.ViewHolder> {
+public class OfferAdapter extends RecyclerView.Adapter<OfferAdapter.ViewHolder> {
     private Context context;
-    private List<Story> stories;
     private LayoutInflater inflater;
-    private OnClickItemListener onClickItemListener;
-    private String type = "";
+    private List<Story> stories;
+    public OnClickItemListener clickItemListener;
 
-    public StoryAdapter(Context context, List<Story> stories,String type) {
-        this.context = context;
-        this.stories = stories;
-        this.type = type;
-        inflater = LayoutInflater.from(context);
+    public void setClickItemListener(OnClickItemListener clickItemListener) {
+        this.clickItemListener = clickItemListener;
     }
 
+    public OfferAdapter(Context context, List<Story> stories) {
+        this.context = context;
+        this.stories = stories;
+        inflater = LayoutInflater.from(context);
+    }
 
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = inflater.inflate(R.layout.item_story, parent, false);
+        View view = inflater.inflate(R.layout.item_offer, parent, false);
         return new ViewHolder(view);
     }
 
@@ -42,39 +45,42 @@ public class StoryAdapter extends RecyclerView.Adapter<StoryAdapter.ViewHolder> 
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         final Story story = stories.get(position);
         holder.txtName.setText(story.getName_story());
-        Glide.with(context).load(story.getImage_story()).into(holder.imgAvatar);
-        holder.txtClassify.setText(type);
+        Glide.with(context).load(story.getImage_story()).into(holder.roundedImageView);
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                onClickItemListener.onClicked(story);
+                clickItemListener.onClickItem(story);
+            }
+        });
+        holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View view) {
+                clickItemListener.onClickLong(story);
+                return true;
             }
         });
     }
+
 
     @Override
     public int getItemCount() {
         return stories.size();
     }
 
-    public void setOnClickItemListener(OnClickItemListener onClickItemListener) {
-        this.onClickItemListener = onClickItemListener;
-    }
-
     public class ViewHolder extends RecyclerView.ViewHolder {
-        private ImageView imgAvatar;
-        private TextView txtName;
-        private TextView txtClassify;
+        public RoundedImageView roundedImageView;
+        public TextView txtName;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
-            imgAvatar = itemView.findViewById(R.id.imgAvatar);
+            roundedImageView = itemView.findViewById(R.id.imgAvatar);
             txtName = itemView.findViewById(R.id.txtName);
-            txtClassify = itemView.findViewById(R.id.txtClassify);
         }
     }
 
-    public interface OnClickItemListener{
-        void onClicked(Story story);
+    public interface OnClickItemListener {
+        void onClickItem(Story story);
+
+        void onClickLong(Story story);
     }
 }

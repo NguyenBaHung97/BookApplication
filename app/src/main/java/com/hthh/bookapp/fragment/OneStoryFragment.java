@@ -1,5 +1,6 @@
 package com.hthh.bookapp.fragment;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,11 +13,18 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.hthh.bookapp.R;
+import com.hthh.bookapp.activity.ChapActivity;
 import com.hthh.bookapp.adapter.StoryAdapter;
 import com.hthh.bookapp.model.Story;
+import com.hthh.bookapp.network.APIController;
+import com.hthh.bookapp.network.RetrofitClient;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class OneStoryFragment extends Fragment {
     private RecyclerView rcvOneStory;
@@ -36,29 +44,47 @@ public class OneStoryFragment extends Fragment {
         } else {
             View view = inflater.inflate(R.layout.fragment_one_story, container, false);
             initView(view);
-            setUpAdapter();
+            callApiGetData(1);
             return view;
         }
     }
 
     public void initView(View view) {
         rcvOneStory = view.findViewById(R.id.rcvOneStory);
-    }
-
-    public void setUpAdapter() {
         stories = new ArrayList<>();
-        List<String> strings = new ArrayList<>();
-        strings.add("Tình cảm");
-        strings.add("Hành động");
-        stories.add(new Story(R.drawable.book_test, "Tấm cám", strings));
-        stories.add(new Story(R.drawable.book_test, "Tấm cám", strings));
-        stories.add(new Story(R.drawable.book_test, "Tấm cám", strings));
-        stories.add(new Story(R.drawable.book_test, "Tấm cám", strings));
-        stories.add(new Story(R.drawable.book_test, "Tấm cám", strings));
-        storyAdapter = new StoryAdapter(getActivity(), stories);
-        rcvOneStory.setLayoutManager(new LinearLayoutManager(getActivity()));
-        rcvOneStory.setAdapter(storyAdapter);
     }
 
+    public void callApiGetData(int id_type) {
+        Call<List<Story>> call = RetrofitClient.getService().getStoryByType(id_type);
+        Callback<List<Story>> callback = new Callback<List<Story>>() {
+            @Override
+            public void onResponse(Call<List<Story>> call, Response<List<Story>> response) {
+                if (response.body() == null || response.body().size() == 0) {
+
+                } else {
+                    stories.clear();
+                    stories.addAll(response.body());
+                    storyAdapter = new StoryAdapter(getActivity(), stories,"Tình cảm");
+                    storyAdapter.setOnClickItemListener(new StoryAdapter.OnClickItemListener() {
+                        @Override
+                        public void onClicked(Story story) {
+                            Intent intent = new Intent(getActivity(), ChapActivity.class);
+                            intent.putExtra("Story", story);
+                            startActivity(intent);
+                        }
+                    });
+                    rcvOneStory.setLayoutManager(new LinearLayoutManager(getActivity()));
+                    rcvOneStory.setAdapter(storyAdapter);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<Story>> call, Throwable t) {
+
+            }
+        };
+        call.enqueue(callback);
+
+    }
 
 }

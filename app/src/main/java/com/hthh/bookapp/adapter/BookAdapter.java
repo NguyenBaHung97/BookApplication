@@ -10,17 +10,20 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.hthh.bookapp.R;
 import com.hthh.bookapp.model.Book;
+import com.hthh.bookapp.model.Story;
 
 import java.util.List;
 
 public class BookAdapter extends RecyclerView.Adapter<BookAdapter.ViewHolder> {
     private Context context;
-    private List<Book> books;
+    private List<Story> books;
     private LayoutInflater inflater;
+    private StoryAdapter.OnClickItemListener onClickItemListener;
 
-    public BookAdapter(Context context, List<Book> books) {
+    public BookAdapter(Context context, List<Story> books) {
         this.context = context;
         this.books = books;
         inflater = LayoutInflater.from(context);
@@ -35,14 +38,24 @@ public class BookAdapter extends RecyclerView.Adapter<BookAdapter.ViewHolder> {
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        Book book = books.get(position);
-        holder.imgAvatar.setImageDrawable(context.getResources().getDrawable(book.getId()));
-        holder.txtName.setText(book.getName());
+        final Story book = books.get(position);
+        Glide.with(context).load(book.getImage_story()).into(holder.imgAvatar);
+        holder.txtName.setText(book.getName_story());
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                onClickItemListener.onClicked(book);
+            }
+        });
     }
 
     @Override
     public int getItemCount() {
         return books.size();
+    }
+
+    public void setOnClickItemListener(StoryAdapter.OnClickItemListener onClickItemListener) {
+        this.onClickItemListener = onClickItemListener;
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
@@ -54,5 +67,9 @@ public class BookAdapter extends RecyclerView.Adapter<BookAdapter.ViewHolder> {
             imgAvatar = itemView.findViewById(R.id.imgAvatar);
             txtName = itemView.findViewById(R.id.txtName);
         }
+    }
+
+    public interface OnClickItemListener{
+        void onClicked(Story story);
     }
 }
