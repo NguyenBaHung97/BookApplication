@@ -67,9 +67,9 @@ public class HomeFragment extends Fragment {
             View view = inflater.inflate(R.layout.fragment_home, container, false);
             initView(view);
             setSlideAdapter();
-            callApiGetData(5);
-            callApiGetDataHot(6);
-            callApiGetDataOffer(7);
+            callApiGetData(4);
+            callApiGetDataHot(5);
+            callApiGetDataOffer(6);
             return view;
         }
 
@@ -89,11 +89,11 @@ public class HomeFragment extends Fragment {
 
     public void setSlideAdapter() {
         integerList = new ArrayList<>();
-        integerList.add(R.drawable.poster_doraemon);
-        integerList.add(R.drawable.poster_one_piece);
-        integerList.add(R.drawable.poster_naruto);
-        integerList.add(R.drawable.slide_test);
-        integerList.add(R.drawable.slide_test);
+        integerList.add(R.drawable.a);
+        integerList.add(R.drawable.b);
+        integerList.add(R.drawable.c);
+        integerList.add(R.drawable.d);
+        integerList.add(R.drawable.e);
 
         adapter = new SlideAdapter(getActivity(), integerList);
         vpSlide.setAdapter(adapter);
@@ -149,7 +149,6 @@ public class HomeFragment extends Fragment {
 
             @Override
             public void onFailure(Call<List<Story>> call, Throwable t) {
-
             }
         };
         call.enqueue(callback);
@@ -205,7 +204,6 @@ public class HomeFragment extends Fragment {
 
             @Override
             public void onFailure(Call<List<Story>> call, Throwable t) {
-
             }
         };
         call.enqueue(callback);
@@ -232,8 +230,25 @@ public class HomeFragment extends Fragment {
                         }
 
                         @Override
-                        public void onClickLong(Story story) {
-
+                        public void onClickLong(final Story story) {
+                            final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                            builder.setTitle("Thông báo");
+                            builder.setMessage("Bạn có muốn thêm: " + story.getName_story() + " vào tủ truyện không ?");
+                            builder.setNegativeButton("Không", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+                                    dialogInterface.dismiss();
+                                }
+                            });
+                            builder.setPositiveButton("Có", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+                                    callApiAddStory(story);
+                                    dialogInterface.dismiss();
+                                }
+                            });
+                            AlertDialog alertDialog = builder.create();
+                            alertDialog.show();
                         }
                     });
                     rcvOffer.setLayoutManager(new GridLayoutManager(getActivity(), 2));
@@ -243,7 +258,6 @@ public class HomeFragment extends Fragment {
 
             @Override
             public void onFailure(Call<List<Story>> call, Throwable t) {
-
             }
         };
         call.enqueue(callback);
@@ -251,10 +265,12 @@ public class HomeFragment extends Fragment {
     }
 
     public void callApiAddStory(Story story) {
+        Utils.showLoadingDialog(getActivity());
         Call<StoryData> call = RetrofitClient.getService().insertStory(story.getId(), Utils.getUser(getActivity()));
         Callback<StoryData> callback = new Callback<StoryData>() {
             @Override
             public void onResponse(Call<StoryData> call, Response<StoryData> response) {
+                Utils.hideLoadingDialog();
                 if (response.body().getStatus() == 0) {
                     Toast.makeText(getActivity(), response.body().getData(), Toast.LENGTH_SHORT).show();
                 } else {
@@ -264,6 +280,7 @@ public class HomeFragment extends Fragment {
 
             @Override
             public void onFailure(Call<StoryData> call, Throwable t) {
+                Utils.hideLoadingDialog();
                 Toast.makeText(getActivity(), "Thêm truyện thất bại", Toast.LENGTH_SHORT).show();
             }
         };

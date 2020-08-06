@@ -1,14 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="250dp"
+    android:background="@android:color/holo_orange_light"
     xmlns:app="http://schemas.android.com/apk/res-auto">
-    <ImageView
+    <com.makeramen.roundedimageview.RoundedImageView
+        app:riv_corner_radius="8dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_margin="32dp"
         android:id="@+id/imgSlide"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
         android:scaleType="centerCrop"
-        android:layout_width="match_parent"
-        android:layout_height="280dp"/>
+        android:layout_width="140dp"
+        android:layout_height="200dp"/>
+    <TextView
+        android:textColor="#2196F3"
+        android:shadowDx="2"
+        android:shadowDy="2"
+        android:shadowRadius="4"
+        android:id="@+id/txtName"
+        android:textSize="32sp"
+        android:fontFamily="serif"
+        android:textStyle="italic"
+        android:layout_marginLeft="16dp"
+        android:lines="3"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/imgSlide"
+        app:layout_constraintTop_toTopOf="@id/imgSlide"
+        app:layout_constraintBottom_toBottomOf="@id/imgSlide"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp" />
 </androidx.constraintlayout.widget.ConstraintLayout>

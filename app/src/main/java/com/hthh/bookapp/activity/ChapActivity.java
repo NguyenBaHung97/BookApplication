@@ -18,6 +18,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.hthh.bookapp.R;
+import com.hthh.bookapp.Utils;
 import com.hthh.bookapp.adapter.ChapAdapter;
 import com.hthh.bookapp.model.ChapStory;
 import com.hthh.bookapp.model.Story;
@@ -56,7 +57,7 @@ public class ChapActivity extends AppCompatActivity {
             txtName.setText(storyOfBookcase.getName());
             callApiGetData(Integer.parseInt(storyOfBookcase.getId()));
         }
-        if (getIntent().hasExtra("Story")){
+        if (getIntent().hasExtra("Story")) {
             story = (Story) getIntent().getSerializableExtra("Story");
             Glide.with(this).load(story.getImage_story()).into(imgAvatar);
             txtName.setText(story.getName_story());
@@ -65,10 +66,12 @@ public class ChapActivity extends AppCompatActivity {
     }
 
     public void callApiGetData(int id) {
+        Utils.showLoadingDialog(this);
         Call<List<ChapStory>> call = RetrofitClient.getService().getChap(id);
         Callback<List<ChapStory>> callback = new Callback<List<ChapStory>>() {
             @Override
             public void onResponse(Call<List<ChapStory>> call, Response<List<ChapStory>> response) {
+                Utils.hideLoadingDialog();
                 if (response.body() == null || response.body().size() == 0) {
 
                 } else {
@@ -88,7 +91,7 @@ public class ChapActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<List<ChapStory>> call, Throwable t) {
-
+                Utils.hideLoadingDialog();
             }
         };
         call.enqueue(callback);

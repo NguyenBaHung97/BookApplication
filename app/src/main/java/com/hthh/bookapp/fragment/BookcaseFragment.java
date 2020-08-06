@@ -1,11 +1,14 @@
 package com.hthh.bookapp.fragment;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -14,8 +17,10 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.hthh.bookapp.R;
+import com.hthh.bookapp.Utils;
 import com.hthh.bookapp.activity.ChapActivity;
 import com.hthh.bookapp.adapter.BookcaseAdapter;
+import com.hthh.bookapp.model.StoryData;
 import com.hthh.bookapp.model.StoryOfBookcase;
 import com.hthh.bookapp.network.APIController;
 import com.hthh.bookapp.network.RetrofitClient;
@@ -49,7 +54,7 @@ public class BookcaseFragment extends Fragment {
     }
 
     public void callApiGetData() {
-        Call<List<StoryOfBookcase>> call = RetrofitClient.getService().getStory(1);
+        Call<List<StoryOfBookcase>> call = RetrofitClient.getService().getStory(Integer.parseInt(Utils.getUser(getActivity())));
         Callback<List<StoryOfBookcase>> callback = new Callback<List<StoryOfBookcase>>() {
             @Override
             public void onResponse(Call<List<StoryOfBookcase>> call, Response<List<StoryOfBookcase>> response) {
@@ -64,6 +69,28 @@ public class BookcaseFragment extends Fragment {
                             intent.putExtra("StoryOfBookcase", storyOfBookcase);
                             startActivity(intent);
                         }
+
+                        @Override
+                        public void onLongClicked(final StoryOfBookcase storyOfBookcase) {
+                            final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                            builder.setTitle("Thông báo");
+                            builder.setMessage("Bạn có muốn xóa: " + storyOfBookcase.getName() + " khỏi tủ truyện không ?");
+                            builder.setNegativeButton("Không", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+                                    dialogInterface.dismiss();
+                                }
+                            });
+                            builder.setPositiveButton("Có", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+                                    callApiDelete(storyOfBookcase.getId(), Utils.getUser(getActivity()));
+                                    dialogInterface.dismiss();
+                                }
+                            });
+                            AlertDialog alertDialog = builder.create();
+                            alertDialog.show();
+                        }
                     });
                     rcvBookcase.setLayoutManager(new GridLayoutManager(getActivity(), 2));
                     rcvBookcase.setAdapter(bookcaseAdapter);
@@ -73,6 +100,29 @@ public class BookcaseFragment extends Fragment {
             @Override
             public void onFailure(Call<List<StoryOfBookcase>> call, Throwable t) {
                 Log.d("1122", "onFailure: " + t.getMessage());
+            }
+        };
+        call.enqueue(callback);
+    }
+
+    public void callApiDelete(String id_story, String id_user) {
+        Utils.showLoadingDialog(getActivity());
+        Call<StoryData> call = RetrofitClient.getService().deleteStory(id_story, id_user);
+        Callback<StoryData> callback = new Callback<StoryData>() {
+            @Override
+            public void onResponse(Call<StoryData> call, Response<StoryData> response) {
+                Utils.hideLoadingDialog();
+                if (response.body().getStatus() == 0) {
+                    Toast.makeText(getActivity(), response.body().getData(), Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(getActivity(), response.body().getData(), Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<StoryData> call, Throwable t) {
+                Utils.hideLoadingDialog();
+                Toast.makeText(getActivity(), "Xóa truyện thất bại", Toast.LENGTH_SHORT).show();
             }
         };
         call.enqueue(callback);

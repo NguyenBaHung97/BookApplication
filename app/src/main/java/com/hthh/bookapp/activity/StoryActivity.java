@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.hthh.bookapp.R;
+import com.hthh.bookapp.Utils;
 import com.hthh.bookapp.adapter.ImageAdapter;
 import com.hthh.bookapp.model.LinkImage;
 import com.hthh.bookapp.network.RetrofitClient;
@@ -46,10 +47,12 @@ public class StoryActivity extends AppCompatActivity {
     }
 
     public void callApiGetData(int idChap) {
+        Utils.showLoadingDialog(this);
         Call<List<LinkImage>> call = RetrofitClient.getService().getLinkImage(idChap);
         Callback<List<LinkImage>> callback = new Callback<List<LinkImage>>() {
             @Override
             public void onResponse(Call<List<LinkImage>> call, Response<List<LinkImage>> response) {
+                Utils.hideLoadingDialog();
                 if (response.body() == null || response.body().size() == 0) {
                     Log.d("7881", "onFailure11: " );
                 } else {
@@ -61,6 +64,7 @@ public class StoryActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<List<LinkImage>> call, Throwable t) {
+                Utils.hideLoadingDialog();
                 Log.d("7881", "onFailure: " + t.getMessage());
             }
         };

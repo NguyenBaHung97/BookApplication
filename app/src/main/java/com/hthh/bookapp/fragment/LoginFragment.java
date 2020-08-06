@@ -76,20 +76,23 @@ public class LoginFragment extends Fragment {
     }
 
     public void callApiLogin(String email, String password) {
+        Utils.showLoadingDialog(getActivity());
         Call<UserData> call = RetrofitClient.getService().login(email, password);
         Callback<UserData> callback = new Callback<UserData>() {
             @Override
             public void onResponse(Call<UserData> call, Response<UserData> response) {
+                Utils.hideLoadingDialog();
                 if (response.body().getStatus() == 0) {
                     Toast.makeText(getActivity(), "Email hoặc mật khẩu chưa chính xác", Toast.LENGTH_SHORT).show();
                 } else {
-                    Utils.setUser(getActivity(),Integer.parseInt(response.body().getData().getId_user()));
+                    Utils.setUser(getActivity(),response.body().getData().getId_user());
                     startActivity(new Intent(getActivity(), MainActivity.class));
                 }
             }
 
             @Override
             public void onFailure(Call<UserData> call, Throwable t) {
+                Utils.hideLoadingDialog();
                 Toast.makeText(getActivity(), "Email hoặc mật khẩu chưa chính xác", Toast.LENGTH_SHORT).show();
             }
         };

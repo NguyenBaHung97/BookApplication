@@ -106,7 +106,6 @@ public class OneStoryFragment extends Fragment {
 
             @Override
             public void onFailure(Call<List<Story>> call, Throwable t) {
-
             }
         };
         call.enqueue(callback);
@@ -114,10 +113,12 @@ public class OneStoryFragment extends Fragment {
     }
 
     public void callApiAddStory(Story story) {
+        Utils.showLoadingDialog(getActivity());
         Call<StoryData> call = RetrofitClient.getService().insertStory(story.getId(), Utils.getUser(getActivity()));
         Callback<StoryData> callback = new Callback<StoryData>() {
             @Override
             public void onResponse(Call<StoryData> call, Response<StoryData> response) {
+                Utils.hideLoadingDialog();
                 if (response.body().getStatus() == 0) {
                     Toast.makeText(getActivity(),response.body().getData(),Toast.LENGTH_SHORT).show();
                 } else {
@@ -127,6 +128,7 @@ public class OneStoryFragment extends Fragment {
 
             @Override
             public void onFailure(Call<StoryData> call, Throwable t) {
+                Utils.hideLoadingDialog();
                 Toast.makeText(getActivity(),"Thêm truyện thất bại",Toast.LENGTH_SHORT).show();
             }
         };

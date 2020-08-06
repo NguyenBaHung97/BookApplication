@@ -1,6 +1,7 @@
 package com.hthh.bookapp.adapter;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,6 +11,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.hthh.bookapp.Key;
 import com.hthh.bookapp.R;
 import com.hthh.bookapp.model.LinkImage;
 
@@ -36,6 +38,11 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ViewHolder> 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         LinkImage linkImage = images.get(position);
+        if (linkImage.getImage().contains("localhost/")){
+            Glide.with(context).load(linkImage.getImage().replace("localhost/", Key.BASE_DOMAIN)).into(holder.imgStory);
+            Log.d("TAG11", "onBindViewHolder: " + linkImage.getImage().replace("localhost/", Key.BASE_DOMAIN));
+            return;
+        }
         Glide.with(context).load(linkImage.getImage()).into(holder.imgStory);
     }
 

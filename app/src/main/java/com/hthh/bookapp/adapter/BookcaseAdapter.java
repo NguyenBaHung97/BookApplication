@@ -45,14 +45,18 @@ public class BookcaseAdapter extends RecyclerView.Adapter<BookcaseAdapter.ViewHo
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         final StoryOfBookcase storyOfBookcase = stories.get(position);
         holder.txtName.setText(storyOfBookcase.getName());
-        Log.d("9001", "onBindViewHolder: " + storyOfBookcase.getLinkimage());
-        String image = "\"" + storyOfBookcase.getLinkimage() + "\"";
-        Log.d("8999", "onBindViewHolder: ");
         Glide.with(context).load(storyOfBookcase.getLinkimage()).into(holder.roundedImageView);
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 clickItemListener.onClickItem(storyOfBookcase);
+            }
+        });
+        holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View view) {
+                clickItemListener.onLongClicked(storyOfBookcase);
+                return false;
             }
         });
     }
@@ -76,5 +80,7 @@ public class BookcaseAdapter extends RecyclerView.Adapter<BookcaseAdapter.ViewHo
 
     public interface OnClickItemListener {
         void onClickItem(StoryOfBookcase storyOfBookcase);
+
+        void onLongClicked(StoryOfBookcase storyOfBookcase);
     }
 }

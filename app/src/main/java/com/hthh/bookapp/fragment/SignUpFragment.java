@@ -75,20 +75,23 @@ public class SignUpFragment extends Fragment {
     }
 
     public void callApiSignUp(String email, String password) {
+        Utils.showLoadingDialog(getActivity());
         Call<UserData> call = RetrofitClient.getService().signup(email, password);
         Callback<UserData> callback = new Callback<UserData>() {
             @Override
             public void onResponse(Call<UserData> call, Response<UserData> response) {
+                Utils.hideLoadingDialog();
                 if (response.body().getStatus() == 0) {
                     Toast.makeText(getActivity(), "Email hoặc mật khẩu đã tồn tại", Toast.LENGTH_SHORT).show();
                 } else {
-                    Utils.setUser(getActivity(),Integer.parseInt(response.body().getData().getId_user()));
+                    Utils.setUser(getActivity(),response.body().getData().getId_user());
                     startActivity(new Intent(getActivity(), MainActivity.class));
                 }
             }
 
             @Override
             public void onFailure(Call<UserData> call, Throwable t) {
+                Utils.hideLoadingDialog();
                 Toast.makeText(getActivity(), "Email hoặc mật khẩu đã tồn tại", Toast.LENGTH_SHORT).show();
             }
         };
