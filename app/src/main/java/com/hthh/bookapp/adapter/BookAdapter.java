@@ -12,7 +12,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.hthh.bookapp.R;
-import com.hthh.bookapp.model.Book;
 import com.hthh.bookapp.model.Story;
 
 import java.util.List;

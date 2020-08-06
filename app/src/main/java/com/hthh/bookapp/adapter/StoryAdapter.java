@@ -50,6 +50,13 @@ public class StoryAdapter extends RecyclerView.Adapter<StoryAdapter.ViewHolder> 
                 onClickItemListener.onClicked(story);
             }
         });
+        holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                onClickItemListener.onLongClicked(story);
+                return false;
+            }
+        });
     }
 
     @Override
@@ -76,5 +83,7 @@ public class StoryAdapter extends RecyclerView.Adapter<StoryAdapter.ViewHolder> 
 
     public interface OnClickItemListener{
         void onClicked(Story story);
+
+        void onLongClicked(Story story);
     }
 }

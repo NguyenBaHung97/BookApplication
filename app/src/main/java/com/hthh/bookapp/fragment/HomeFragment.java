@@ -1,16 +1,13 @@
 package com.hthh.bookapp.fragment;
 
 import android.app.AlertDialog;
-import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
-import android.widget.ImageView;
-import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -21,15 +18,13 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager.widget.ViewPager;
 
 import com.hthh.bookapp.R;
+import com.hthh.bookapp.Utils;
 import com.hthh.bookapp.activity.ChapActivity;
 import com.hthh.bookapp.adapter.BookAdapter;
 import com.hthh.bookapp.adapter.OfferAdapter;
 import com.hthh.bookapp.adapter.SlideAdapter;
-import com.hthh.bookapp.adapter.StoryAdapter;
-import com.hthh.bookapp.api.AddStory;
-import com.hthh.bookapp.api.Apirun;
-import com.hthh.bookapp.model.Book;
 import com.hthh.bookapp.model.Story;
+import com.hthh.bookapp.model.StoryData;
 import com.hthh.bookapp.network.RetrofitClient;
 
 import java.util.ArrayList;
@@ -40,7 +35,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class HomeFragment extends Fragment implements AddStory {
+public class HomeFragment extends Fragment {
     private List<Integer> integerList;
     private SlideAdapter adapter;
     private ViewPager vpSlide;
@@ -139,8 +134,7 @@ public class HomeFragment extends Fragment implements AddStory {
                             builder.setPositiveButton("Có", new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialogInterface, int i) {
-                                    String sql = "INSERT INTO `story_talk` (`id`, `id_story`, `id_user`) VALUES (NULL, '" + 6 + "', '1')";
-                                    new Apirun(sql, HomeFragment.this).execute();
+                                    callApiAddStory(story);
                                     dialogInterface.dismiss();
                                 }
                             });
@@ -183,8 +177,25 @@ public class HomeFragment extends Fragment implements AddStory {
                         }
 
                         @Override
-                        public void onLongClick(Story story) {
-
+                        public void onLongClick(final Story story) {
+                            final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                            builder.setTitle("Thông báo");
+                            builder.setMessage("Bạn có muốn thêm: " + story.getName_story() + " vào tủ truyện không ?");
+                            builder.setNegativeButton("Không", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+                                    dialogInterface.dismiss();
+                                }
+                            });
+                            builder.setPositiveButton("Có", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+                                    callApiAddStory(story);
+                                    dialogInterface.dismiss();
+                                }
+                            });
+                            AlertDialog alertDialog = builder.create();
+                            alertDialog.show();
                         }
                     });
                     rcvBookHot.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false));
@@ -239,19 +250,24 @@ public class HomeFragment extends Fragment implements AddStory {
 
     }
 
+    public void callApiAddStory(Story story) {
+        Call<StoryData> call = RetrofitClient.getService().insertStory(story.getId(), Utils.getUser(getActivity()));
+        Callback<StoryData> callback = new Callback<StoryData>() {
+            @Override
+            public void onResponse(Call<StoryData> call, Response<StoryData> response) {
+                if (response.body().getStatus() == 0) {
+                    Toast.makeText(getActivity(), response.body().getData(), Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(getActivity(), response.body().getData(), Toast.LENGTH_SHORT).show();
+                }
+            }
 
-    @Override
-    public void start() {
-
+            @Override
+            public void onFailure(Call<StoryData> call, Throwable t) {
+                Toast.makeText(getActivity(), "Thêm truyện thất bại", Toast.LENGTH_SHORT).show();
+            }
+        };
+        call.enqueue(callback);
     }
 
-    @Override
-    public void finish(String data) {
-
-    }
-
-    @Override
-    public void error() {
-
-    }
 }

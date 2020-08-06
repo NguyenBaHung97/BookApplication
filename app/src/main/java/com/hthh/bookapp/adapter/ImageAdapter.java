@@ -1,7 +1,6 @@
 package com.hthh.bookapp.adapter;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,12 +15,12 @@ import com.hthh.bookapp.model.LinkImage;
 
 import java.util.List;
 
-public class ViewStoryAdapter extends RecyclerView.Adapter<ViewStoryAdapter.ViewHolder> {
+public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ViewHolder> {
     private Context context;
     private LayoutInflater inflater;
     private List<LinkImage> images;
 
-    public ViewStoryAdapter(Context context, List<LinkImage> images) {
+    public ImageAdapter(Context context, List<LinkImage> images) {
         this.context = context;
         this.images = images;
         inflater = LayoutInflater.from(context);

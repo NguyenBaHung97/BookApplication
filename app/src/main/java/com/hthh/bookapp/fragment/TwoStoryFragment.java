@@ -1,10 +1,13 @@
 package com.hthh.bookapp.fragment;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -13,9 +16,11 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.hthh.bookapp.R;
+import com.hthh.bookapp.Utils;
 import com.hthh.bookapp.activity.ChapActivity;
 import com.hthh.bookapp.adapter.StoryAdapter;
 import com.hthh.bookapp.model.Story;
+import com.hthh.bookapp.model.StoryData;
 import com.hthh.bookapp.network.RetrofitClient;
 
 import java.util.ArrayList;
@@ -71,6 +76,28 @@ public class TwoStoryFragment extends Fragment {
                             intent.putExtra("Story", story);
                             startActivity(intent);
                         }
+
+                        @Override
+                        public void onLongClicked(final Story story) {
+                            final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                            builder.setTitle("Thông báo");
+                            builder.setMessage("Bạn có muốn thêm: " + story.getName_story() + " vào tủ truyện không ?");
+                            builder.setNegativeButton("Không", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+                                    dialogInterface.dismiss();
+                                }
+                            });
+                            builder.setPositiveButton("Có", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+                                    callApiAddStory(story);
+                                    dialogInterface.dismiss();
+                                }
+                            });
+                            AlertDialog alertDialog = builder.create();
+                            alertDialog.show();
+                        }
                     });
                     rcvTwoStory.setLayoutManager(new LinearLayoutManager(getActivity()));
                     rcvTwoStory.setAdapter(storyAdapter);
@@ -84,6 +111,26 @@ public class TwoStoryFragment extends Fragment {
         };
         call.enqueue(callback);
 
+    }
+
+    public void callApiAddStory(Story story) {
+        Call<StoryData> call = RetrofitClient.getService().insertStory(story.getId(), Utils.getUser(getActivity()));
+        Callback<StoryData> callback = new Callback<StoryData>() {
+            @Override
+            public void onResponse(Call<StoryData> call, Response<StoryData> response) {
+                if (response.body().getStatus() == 0) {
+                    Toast.makeText(getActivity(),response.body().getData(),Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(getActivity(),response.body().getData(),Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<StoryData> call, Throwable t) {
+                Toast.makeText(getActivity(),"Thêm truyện thất bại",Toast.LENGTH_SHORT).show();
+            }
+        };
+        call.enqueue(callback);
     }
 
 }
