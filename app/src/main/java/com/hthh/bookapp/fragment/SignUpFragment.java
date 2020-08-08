@@ -85,6 +85,7 @@ public class SignUpFragment extends Fragment {
                     Toast.makeText(getActivity(), "Email hoặc mật khẩu đã tồn tại", Toast.LENGTH_SHORT).show();
                 } else {
                     Utils.setUser(getActivity(),response.body().getData().getId_user());
+                    Utils.setEmail(getActivity(),response.body().getData().getEmail());
                     startActivity(new Intent(getActivity(), MainActivity.class));
                 }
             }

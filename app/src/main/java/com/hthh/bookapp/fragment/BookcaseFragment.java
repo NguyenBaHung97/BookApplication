@@ -8,6 +8,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -19,6 +20,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.hthh.bookapp.R;
 import com.hthh.bookapp.Utils;
 import com.hthh.bookapp.activity.ChapActivity;
+import com.hthh.bookapp.activity.FirstActivity;
 import com.hthh.bookapp.adapter.BookcaseAdapter;
 import com.hthh.bookapp.model.StoryData;
 import com.hthh.bookapp.model.StoryOfBookcase;
@@ -34,6 +36,8 @@ import retrofit2.Response;
 public class BookcaseFragment extends Fragment {
     RecyclerView rcvBookcase;
     BookcaseAdapter bookcaseAdapter;
+    TextView txtNameUser;
+    TextView txtLogout;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -48,6 +52,7 @@ public class BookcaseFragment extends Fragment {
         } else {
             View view = inflater.inflate(R.layout.fragment_book_case, container, false);
             initView(view);
+            listener();
             callApiGetData();
             return view;
         }
@@ -58,7 +63,7 @@ public class BookcaseFragment extends Fragment {
         Callback<List<StoryOfBookcase>> callback = new Callback<List<StoryOfBookcase>>() {
             @Override
             public void onResponse(Call<List<StoryOfBookcase>> call, Response<List<StoryOfBookcase>> response) {
-                if (response.body() == null || response.body().size() == 0) {
+                if (response.body() == null) {
 
                 } else {
                     bookcaseAdapter = new BookcaseAdapter(getActivity(), response.body());
@@ -116,6 +121,7 @@ public class BookcaseFragment extends Fragment {
                     Toast.makeText(getActivity(), response.body().getData(), Toast.LENGTH_SHORT).show();
                 } else {
                     Toast.makeText(getActivity(), response.body().getData(), Toast.LENGTH_SHORT).show();
+                    callApiGetData();
                 }
             }
 
@@ -130,6 +136,40 @@ public class BookcaseFragment extends Fragment {
 
     public void initView(View view) {
         rcvBookcase = view.findViewById(R.id.rcvBookcase);
+        txtNameUser = view.findViewById(R.id.txtNameUser);
+        txtLogout = view.findViewById(R.id.txtLogout);
+
+        txtNameUser.setText(Utils.getEmail(getActivity()));
+    }
+
+    public void listener() {
+        txtLogout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                builder.setTitle("Thông báo");
+                builder.setMessage("Bạn có muốn đăng xuất không ?");
+                builder.setNegativeButton("Không", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        dialogInterface.dismiss();
+                    }
+                });
+                builder.setPositiveButton("Có", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        Utils.removeUser(getActivity());
+                        Utils.removeEmail(getActivity());
+                        dialogInterface.dismiss();
+                        startActivity(new Intent(getActivity(), FirstActivity.class));
+                        getActivity().finishAffinity();
+                        getActivity().finish();
+                    }
+                });
+                AlertDialog alertDialog = builder.create();
+                alertDialog.show();
+            }
+        });
     }
 
 }

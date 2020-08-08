@@ -1,8 +1,6 @@
 package com.hthh.bookapp.activity;
 
-import android.content.Intent;
 import android.graphics.Color;
-import android.media.Image;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
@@ -13,36 +11,35 @@ import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
+import androidx.viewpager.widget.ViewPager;
 
 import com.bumptech.glide.Glide;
+import com.google.android.material.tabs.TabLayout;
 import com.hthh.bookapp.R;
-import com.hthh.bookapp.Utils;
-import com.hthh.bookapp.adapter.ChapAdapter;
-import com.hthh.bookapp.model.ChapStory;
+import com.hthh.bookapp.adapter.RateAndChapAdapter;
 import com.hthh.bookapp.model.Story;
 import com.hthh.bookapp.model.StoryOfBookcase;
-import com.hthh.bookapp.network.RetrofitClient;
-
-import java.util.List;
-
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 public class ChapActivity extends AppCompatActivity {
-    private RecyclerView rcvChap;
     private ImageView imgAvatar;
     private TextView txtName;
-    private ChapAdapter chapAdapter;
     private StoryOfBookcase storyOfBookcase;
     private Story story;
+    private RateAndChapAdapter rateAndChapAdapter;
+    private ViewPager vpRateAndChap;
+    private TabLayout tabLayout;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chap);
+        changeColorStatusBar();
+        initView();
+        getData();
+
+    }
+
+    public void changeColorStatusBar() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             Window window = getWindow();
             window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
@@ -50,55 +47,30 @@ public class ChapActivity extends AppCompatActivity {
             window.setStatusBarColor(Color.parseColor("#FFFFFF"));
             window.setNavigationBarColor(getResources().getColor(R.color.color_black));
         }
-        initView();
+    }
+
+    public void getData() {
         if (getIntent().hasExtra("StoryOfBookcase")) {
             storyOfBookcase = (StoryOfBookcase) getIntent().getSerializableExtra("StoryOfBookcase");
             Glide.with(this).load(storyOfBookcase.getLinkimage()).into(imgAvatar);
             txtName.setText(storyOfBookcase.getName());
-            callApiGetData(Integer.parseInt(storyOfBookcase.getId()));
+            rateAndChapAdapter = new RateAndChapAdapter(getSupportFragmentManager(), Integer.parseInt(storyOfBookcase.getId()));
+            vpRateAndChap.setAdapter(rateAndChapAdapter);
+            tabLayout.setupWithViewPager(vpRateAndChap);
         }
         if (getIntent().hasExtra("Story")) {
             story = (Story) getIntent().getSerializableExtra("Story");
             Glide.with(this).load(story.getImage_story()).into(imgAvatar);
             txtName.setText(story.getName_story());
-            callApiGetData(Integer.parseInt(story.getId()));
+            rateAndChapAdapter = new RateAndChapAdapter(getSupportFragmentManager(), Integer.parseInt(story.getId()));
+            vpRateAndChap.setAdapter(rateAndChapAdapter);
+            tabLayout.setupWithViewPager(vpRateAndChap);
         }
     }
 
-    public void callApiGetData(int id) {
-        Utils.showLoadingDialog(this);
-        Call<List<ChapStory>> call = RetrofitClient.getService().getChap(id);
-        Callback<List<ChapStory>> callback = new Callback<List<ChapStory>>() {
-            @Override
-            public void onResponse(Call<List<ChapStory>> call, Response<List<ChapStory>> response) {
-                Utils.hideLoadingDialog();
-                if (response.body() == null || response.body().size() == 0) {
-
-                } else {
-                    chapAdapter = new ChapAdapter(ChapActivity.this, response.body());
-                    chapAdapter.setOnClickItemListener(new ChapAdapter.OnClickItemListener() {
-                        @Override
-                        public void onClicked(int id) {
-                            Intent intent = new Intent(ChapActivity.this, StoryActivity.class);
-                            intent.putExtra("id_chap", id);
-                            startActivity(intent);
-                        }
-                    });
-                    rcvChap.setLayoutManager(new LinearLayoutManager(ChapActivity.this));
-                    rcvChap.setAdapter(chapAdapter);
-                }
-            }
-
-            @Override
-            public void onFailure(Call<List<ChapStory>> call, Throwable t) {
-                Utils.hideLoadingDialog();
-            }
-        };
-        call.enqueue(callback);
-    }
-
     private void initView() {
-        rcvChap = findViewById(R.id.rcvChap);
+        tabLayout = findViewById(R.id.tabLayout);
+        vpRateAndChap = findViewById(R.id.vpRateAndChap);
         imgAvatar = findViewById(R.id.imgAvatar);
         txtName = findViewById(R.id.txtName);
     }

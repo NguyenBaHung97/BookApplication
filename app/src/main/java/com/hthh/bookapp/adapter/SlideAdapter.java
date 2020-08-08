@@ -1,6 +1,8 @@
 package com.hthh.bookapp.adapter;
 
 import android.content.Context;
+import android.graphics.Color;
+import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -42,26 +44,38 @@ public class SlideAdapter extends PagerAdapter {
     @Override
     public Object instantiateItem(@NonNull ViewGroup container, int position) {
         View view = inflater.inflate(R.layout.item_slide, container, false);
-        RoundedImageView imgSlide = view.findViewById(R.id.imgSlide);
+        final RoundedImageView imgSlide = view.findViewById(R.id.imgSlide);
         TextView txtName = view.findViewById(R.id.txtName);
+        final ViewGroup viewGroup = view.findViewById(R.id.viewGroup);
+        final ImageView imgBackground = view.findViewById(R.id.imgBackground);
         switch (position) {
             case 0:
-                txtName.setText("Doraemon");
+                txtName.setText("Doraemon mặt trăng phiêu lưu ký");
                 break;
             case 1:
-                txtName.setText("Conan");
+                txtName.setText("Conan thám tử lừng danh");
                 break;
             case 2:
-                txtName.setText("One piece");
+                txtName.setText("Naruto ngoại truyện");
                 break;
             case 3:
-                txtName.setText("Naruto");
+                txtName.setText("One piece đảo hải tặc");
                 break;
             case 4:
                 txtName.setText("Bảy viên ngọc rồng");
                 break;
         }
         imgSlide.setImageDrawable(context.getResources().getDrawable(integerList.get(position)));
+        Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+
+            @Override
+            public void run() {
+                Blurry.with(context).radius(25).sampling(2).color(Color.argb(92, 255, 255, 255))
+                        .async().capture(imgSlide).into(imgBackground);
+
+            }
+        },200);
         container.addView(view);
         return view;
     }

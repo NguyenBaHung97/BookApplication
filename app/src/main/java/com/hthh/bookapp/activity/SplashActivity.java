@@ -13,6 +13,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.hthh.bookapp.R;
+import com.hthh.bookapp.Utils;
 
 public class SplashActivity extends AppCompatActivity {
     @Override
@@ -31,9 +32,15 @@ public class SplashActivity extends AppCompatActivity {
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
-                startActivity(new Intent(SplashActivity.this, FirstActivity.class));
-                finish();
+                if (Utils.getUser(SplashActivity.this) == null || Utils.getUser(SplashActivity.this).isEmpty()) {
+                    startActivity(new Intent(SplashActivity.this, FirstActivity.class));
+                    finish();
+                } else {
+                    startActivity(new Intent(SplashActivity.this, MainActivity.class));
+                    finish();
+                }
+
             }
-        },1000);
+        }, 1000);
     }
 }

@@ -29,6 +29,8 @@ import com.hthh.bookapp.network.RetrofitClient;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import me.relex.circleindicator.CircleIndicator;
 import retrofit2.Call;
@@ -40,6 +42,7 @@ public class HomeFragment extends Fragment {
     private SlideAdapter adapter;
     private ViewPager vpSlide;
     private CircleIndicator indicator;
+    private Timer timer;
 
     private RecyclerView rcvBook;
     private BookAdapter bookAdapter;
@@ -52,6 +55,7 @@ public class HomeFragment extends Fragment {
     private RecyclerView rcvBookHot;
     private BookAdapter bookHotAdapter;
     private List<Story> storiesHot = new ArrayList<>();
+    int page = 1;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -67,6 +71,8 @@ public class HomeFragment extends Fragment {
             View view = inflater.inflate(R.layout.fragment_home, container, false);
             initView(view);
             setSlideAdapter();
+            changeSlide();
+
             callApiGetData(4);
             callApiGetDataHot(5);
             callApiGetDataOffer(6);
@@ -74,6 +80,32 @@ public class HomeFragment extends Fragment {
         }
 
 
+    }
+
+    public void changeSlide() {
+        timer = new Timer();
+        timer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                if (getActivity() != null) {
+                    getActivity().runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            if (page > 4) {
+                                page = 0;
+                                vpSlide.setCurrentItem(page++);
+                                timer.cancel();
+                                changeSlide();
+                            } else {
+                                vpSlide.setCurrentItem(page++);
+                                timer.cancel();
+                                changeSlide();
+                            }
+                        }
+                    });
+                }
+            }
+        }, 2000);
     }
 
     private void initView(View view) {
