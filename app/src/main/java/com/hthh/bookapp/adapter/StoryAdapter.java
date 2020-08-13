@@ -84,6 +84,7 @@ public class StoryAdapter extends RecyclerView.Adapter<StoryAdapter.ViewHolder> 
     public interface OnClickItemListener{
         void onClicked(Story story);
 
+
         void onLongClicked(Story story);
     }
 }
