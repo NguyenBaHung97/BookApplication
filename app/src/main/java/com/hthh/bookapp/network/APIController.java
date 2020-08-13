@@ -28,7 +28,7 @@ public interface APIController {
     @GET("story_manager/getImage.php")
     Call<List<LinkImage>> getLinkImage(@Query("id_chap") int id_chap);
 
-    @GET("story_manager/layType1.php")
+    @GET("story_manager/get_story_classify.php")
     Call<List<Story>> getStoryByType(@Query("id_type") int id_type);
 
     @FormUrlEncoded
